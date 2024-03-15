@@ -15,7 +15,7 @@ class Calendar extends React.Component {
                 {
                     id: 1,
                     title: 'Event 1',
-                    colors: '',
+                    colors: ['red','green','blue'],
                     date: [{
                         year: 2024,
                         month: 2,
@@ -72,7 +72,7 @@ class Calendar extends React.Component {
                     <HeaderCalendar />
                     <div className="calendar-list calendar-grid">
                         {weekDates.map((el, index) => (
-                            <CalendarItem key={index} item={el} />
+                            <CalendarItem key={index} item={el} events={this.state.events} />
                         ))}
                     </div>
                 </div>
