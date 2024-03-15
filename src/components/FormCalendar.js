@@ -11,18 +11,67 @@ class Calendar extends React.Component {
         this.state = {
             currentYear: new Date().getFullYear(),
             currentMonth: new Date().getMonth(),
-            events: [
+            /*events: [
                 {
-                    id: 1,
-                    title: 'Event 1',
-                    colors: ['red','green','blue'],
-                    date: [{
-                        year: 2024,
-                        month: 2,
-                        day: 11
-                    }],
+                    2024: [ 
+                        {
+                            2: [
+                                {
+                                    11: [
+                                        {
+                                            id: 1,
+                                            title: 'Event 1',
+                                            colors: ['red','green','blue'],
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
                 }
-            ]
+            ]*/
+            events: {
+                2024: {
+                    2: {
+                        11: [
+                            {
+                                title: 'Event 1Event 1Event 1Event 1Event 1Event 1Event 1',
+                                colors: ['red','blue'],
+                            },
+                            {
+                                title: 'Event 11',
+                                colors: ['grey','green'],
+                            },
+                            {
+                                title: 'Event 21',
+                                colors: ['blue','grey'],
+                            }
+                        ],
+                        17: [
+                            {
+                                title: 'Event 17',
+                                colors: ['red','green'],
+                            }
+                        ]
+                    },
+                    3: {
+                        21: [
+                            {
+                                title: 'Event 2',
+                                colors: ['red','green'],
+                            }
+                        ]
+                    },
+                    4: {
+                        1: [
+                            {
+                                title: 'Event 3',
+                                colors: ['red','green'],
+                            }
+                        ]
+                    },
+                }
+            }
         }
 
         this.changeMonth    = this.changeMonth.bind(this)
@@ -71,9 +120,11 @@ class Calendar extends React.Component {
                 <div className="calendar">
                     <HeaderCalendar />
                     <div className="calendar-list calendar-grid">
-                        {weekDates.map((el, index) => (
-                            <CalendarItem key={index} item={el} events={this.state.events} />
-                        ))}
+                        { weekDates.map((el, index) => (
+                                // <CalendarItem key={index} item={el} events={ this.state.events[this.state.currentYear][this.state.currentMonth][el.day]} />
+                                <CalendarItem key={el.year + '_' + el.month + '_' + el.day + '_' + el.index} item={el} events={ this.state.events ? (this.state.events[el.year] ? (this.state.events[el.year][el.month] ? (this.state.events[el.year][ el.month][el.day] ?? []) : []) : []) : []} />
+                            ))
+                        }
                     </div>
                 </div>
             </div>

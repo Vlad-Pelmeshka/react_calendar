@@ -1,5 +1,5 @@
 import React from 'react';
-
+import EventForm from './EventForm';
 
 class Event extends React.Component {
 
@@ -22,6 +22,7 @@ class Event extends React.Component {
                     ))}
                 </div>
                 <div className="event-title">{this.state.event.title}</div>
+                
             </div>
         )
     }

@@ -44,17 +44,26 @@ class Header extends React.Component {
     }
 
     changeMonth(data){
+
+        let year    = this.state.year
+        let month   = this.state.month
+        
         if(data === -1 && this.state.month === 0){
-            this.setState({ year: this.setState-- })
-            this.setState({ month: 11 })
+            year--
+            month = 11
+            this.setState({ year: year })
+            this.setState({ month: month })
         }else if(data === 1 && this.state.month === 11){
-            this.setState({ year: this.setState++ })
-            this.setState({ month: 0 })
+            year++
+            month = 0
+            this.setState({ year: year })
+            this.setState({ month: month })
         }else{
+            month += data
             this.setState({ month: this.state.month+data })
         }
 
-        this.props.onChangeMonth({year: this.state.year, month: this.state.month})
+        this.props.onChangeMonth({year: year, month: month})
     }
 
 }

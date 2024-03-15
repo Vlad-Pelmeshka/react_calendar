@@ -27,11 +27,16 @@
                     background-color: var(--secondary);
 
                     margin: 1px;
-                    padding: 4px;
+                    padding: 5px;
                     border-radius: 1px;
 
-                    height: 90px;
+                    height: 100px;
 
+                }
+
+                &-event{
+                    height: calc(100% - 10px);
+                    overflow-y: auto;
                 }
 
                 &-head{
