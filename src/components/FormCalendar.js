@@ -1,4 +1,5 @@
 import React from 'react';
+import Header from './Header';
 import HeaderCalendar from './HeaderCalendar';
 import CalendarItem from './CalendarItem';
 // import React, { useState } from 'react';
@@ -24,6 +25,7 @@ class Calendar extends React.Component {
             ]
         }
 
+        this.changeMonth    = this.changeMonth.bind(this)
     }
 
     getWeekDatesForMonth(year, month) {
@@ -63,17 +65,27 @@ class Calendar extends React.Component {
         let weekDates = this.getWeekDatesForMonth(this.state.currentYear, this.state.currentMonth)
         
         // console.log(weekDates)
-        // weekDates.forEach(date => console.log(date.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric'})));
         return (
-            <div className="calendar">
-                <HeaderCalendar />
-                <div className="calendar-list calendar-grid">
-                    {weekDates.map((el, index) => (
-                        <CalendarItem key={index} item={el} />
-                    ))}
+            <div>
+                <Header currentYear={this.state.currentYear} currentMonth={this.state.currentMonth} onChangeMonth={this.changeMonth}/>
+                <div className="calendar">
+                    <HeaderCalendar />
+                    <div className="calendar-list calendar-grid">
+                        {weekDates.map((el, index) => (
+                            <CalendarItem key={index} item={el} />
+                        ))}
+                    </div>
                 </div>
             </div>
         );
+    }
+
+    changeMonth(data){
+        console.log(data)
+        this.setState({
+            currentYear:    data.year,
+            currentMonth:   data.month,
+        })
     }
 }
 
