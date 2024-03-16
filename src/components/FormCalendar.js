@@ -11,26 +11,6 @@ class Calendar extends React.Component {
         this.state = {
             currentYear: new Date().getFullYear(),
             currentMonth: new Date().getMonth(),
-            // currentDay: 0,
-            /*events: [
-                {
-                    2024: [ 
-                        {
-                            2: [
-                                {
-                                    11: [
-                                        {
-                                            id: 1,
-                                            title: 'Event 1',
-                                            colors: ['red','green','blue'],
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]*/
             events: {
                 2024: {
                     2: {
@@ -56,7 +36,7 @@ class Calendar extends React.Component {
                         ]
                     },
                     3: {
-                        21: [
+                        29: [
                             {
                                 title: 'Event 2',
                                 colors: ['#ff0000','#00ff00'],
@@ -76,7 +56,6 @@ class Calendar extends React.Component {
         }
 
         this.changeMonth    = this.changeMonth.bind(this)
-        // this.setDate        = this.setDate.bind(this)
         this.createForm     = this.createForm.bind(this)
     }
 
@@ -118,7 +97,6 @@ class Calendar extends React.Component {
         // console.log(this.state.currentYear)
         let weekDates = this.getWeekDatesForMonth(this.state.currentYear, this.state.currentMonth)
         
-        // console.log(weekDates)
         return (
             <div>
                 <Header currentYear={this.state.currentYear} currentMonth={this.state.currentMonth} onChangeMonth={this.changeMonth}/>
@@ -126,26 +104,17 @@ class Calendar extends React.Component {
                     <HeaderCalendar />
                     <div className="calendar-list calendar-grid">
                         { weekDates.map((el, index) => {
-                                // this.setDate([
-                                //     el.year,
-                                //     el.month,
-                                //     el.day,
-                                // ])
                                 // this.setState({
                                     // currentYear: data.year,
                                     // currentMonth: data.month,
                                     // currentDay: el.day
                                 // })
                                 return( 
-                                    /*<CalendarItem 
-                                        key={el.year + '_' + el.month + '_' + el.day + '_' + el.index} item={el} 
-                                        events={ this.state.events ? (this.state.events[el.year] ? (this.state.events[el.year][el.month] ? (this.state.events[el.year][ el.month][el.day] ?? []) : []) : []) : []} 
-                                    />*/
                                     <CalendarItem 
                                         key={el.year + '_' + el.month + '_' + el.day + '_' + el.index} item={el} 
                                         onCreateForm={(data) => this.createForm([data, el])}
                                         onEditForm={(data, index) => this.editForm(data, index, el.year, el.month, el.day)}
-                                        events={ this.state.events ? (this.state.events[this.state.currentYear] ? (this.state.events[this.state.currentYear][this.state.currentMonth] ? (this.state.events[this.state.currentYear][this.state.currentMonth][el.day] ?? []) : []) : []) : []} 
+                                        events={ this.state.events ? (this.state.events[el.year] ? (this.state.events[el.year][el.month] ? (this.state.events[el.year][el.month][el.day] ?? []) : []) : []) : []} 
                                     />
                                 )
                             })
@@ -158,7 +127,7 @@ class Calendar extends React.Component {
 
 
     changeMonth(data){
-        console.log(data)
+        // console.log(data)
         this.setState({
             currentYear:    data.year,
             currentMonth:   data.month,
@@ -169,10 +138,13 @@ class Calendar extends React.Component {
 
         let events = this.state.events
 
-        if(data.deleteEvent){
+        if(data.deleteEvent)
             delete events[year][month][day][index]
-        }else
+        else if(data.title)
             events[year][month][day][index] = data
+        else
+            alert("Title can`t be empty")
+        
 
         this.setState({ events: {}}, () => {
             this.setState({ events: events })
@@ -191,11 +163,12 @@ class Calendar extends React.Component {
         if(!events[data[1].year][data[1].month][data[1].day])
             events[data[1].year][data[1].month][data[1].day] = []
 
-        events[data[1].year][data[1].month][data[1].day].push(data[0])
+        if(data[0].title)
+            events[data[1].year][data[1].month][data[1].day].push(data[0])
+        else
+            alert("Title can`t be empty")
 
-        // newEvents = this.state.events
-
-        console.log(events[data[1].year][data[1].month])
+        // console.log(events[data[1].year][data[1].month])
 
         this.setState({ events: {}}, () => {
             this.setState({ events: events })
