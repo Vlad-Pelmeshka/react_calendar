@@ -9,8 +9,13 @@ class Calendar extends React.Component {
     constructor(props){
         super(props)
         this.state = {
-            currentYear: new Date().getFullYear(),
-            currentMonth: new Date().getMonth(),
+            // currentYear: new Date().getFullYear(),
+            // currentMonth: new Date().getMonth(),
+            currenDate: [
+                new Date().getFullYear(),
+                new Date().getMonth(),
+                0
+            ],
             /*events: [
                 {
                     2024: [ 
@@ -36,21 +41,21 @@ class Calendar extends React.Component {
                         11: [
                             {
                                 title: 'Event 1Event 1Event 1Event 1Event 1Event 1Event 1',
-                                colors: ['red','blue'],
+                                colors: ['#ff0000','#0000ff'],
                             },
                             {
                                 title: 'Event 11',
-                                colors: ['grey','green'],
+                                colors: ['#ff9955','#00ff00'],
                             },
                             {
                                 title: 'Event 21',
-                                colors: ['blue','grey'],
+                                colors: ['#0000ff','#ff9955'],
                             }
                         ],
                         17: [
                             {
                                 title: 'Event 17',
-                                colors: ['red','green'],
+                                colors: ['#ff0000','#00ff00'],
                             }
                         ]
                     },
@@ -58,7 +63,7 @@ class Calendar extends React.Component {
                         21: [
                             {
                                 title: 'Event 2',
-                                colors: ['red','green'],
+                                colors: ['#ff0000','#00ff00'],
                             }
                         ]
                     },
@@ -66,7 +71,7 @@ class Calendar extends React.Component {
                         1: [
                             {
                                 title: 'Event 3',
-                                colors: ['red','green'],
+                                colors: ['#ff0000','#ff6f00'],
                             }
                         ]
                     },
@@ -75,6 +80,7 @@ class Calendar extends React.Component {
         }
 
         this.changeMonth    = this.changeMonth.bind(this)
+        this.createForm     = this.createForm.bind(this)
     }
 
     getWeekDatesForMonth(year, month) {
@@ -95,7 +101,7 @@ class Calendar extends React.Component {
                 year: currentDate.getFullYear(),
                 month: currentDate.getMonth(),
                 day: currentDate.getDate(),
-                currentMonth: (currentDate.getMonth() === this.state.currentMonth),
+                currentMonth: (currentDate.getMonth() === this.state.currenDate.month),
                 monthShortTitle: (currentDate.getDate() === 1 || currentDate.getTime() === lastDayOfMonth.getTime() || currentDate.getTime() === new Date(year, month, 0).getTime()) ? this.getShortMonthTitle(currentDate.getMonth()) : null
             });
             currentDate.setDate(currentDate.getDate() + 1);
@@ -111,19 +117,27 @@ class Calendar extends React.Component {
     
     render(){
 
-        let weekDates = this.getWeekDatesForMonth(this.state.currentYear, this.state.currentMonth)
+        let weekDates = this.getWeekDatesForMonth(this.state.currenDate.year, this.state.currenDate.month)
         
         // console.log(weekDates)
         return (
             <div>
-                <Header currentYear={this.state.currentYear} currentMonth={this.state.currentMonth} onChangeMonth={this.changeMonth}/>
+                <Header currentYear={this.state.currenDate.year} currentMonth={this.state.currenDate.month} onChangeMonth={this.changeMonth}/>
                 <div className="calendar">
                     <HeaderCalendar />
                     <div className="calendar-list calendar-grid">
-                        { weekDates.map((el, index) => (
-                                // <CalendarItem key={index} item={el} events={ this.state.events[this.state.currentYear][this.state.currentMonth][el.day]} />
-                                <CalendarItem key={el.year + '_' + el.month + '_' + el.day + '_' + el.index} item={el} events={ this.state.events ? (this.state.events[el.year] ? (this.state.events[el.year][el.month] ? (this.state.events[el.year][ el.month][el.day] ?? []) : []) : []) : []} />
-                            ))
+                        { weekDates.map((el, index) => {
+                                this.setDate([
+                                    el.year,
+                                    el.month,
+                                    el.day,
+                                ])
+                                return( <CalendarItem 
+                                    key={el.year + '_' + el.month + '_' + el.day + '_' + el.index} 
+                                    onCreateForm={(data) => this.createForm([data, el])}
+                                    item={el} events={ this.state.events ? (this.state.events[this.state.currenDate.year] ? (this.state.events[this.state.currenDate.year][this.state.currenDate.month] ? (this.state.events[this.state.currenDate.year][this.state.currenDate.month][this.state.currenDate.day] ?? []) : []) : []) : []} 
+                                />)
+                            })
                         }
                     </div>
                 </div>
@@ -131,11 +145,45 @@ class Calendar extends React.Component {
         );
     }
 
+    setDate(data){
+        console.log(data)
+        this.setState({
+            currenDate:    [
+                data.year,
+                data.month,
+                data.date
+            ]
+        })
+    }
+
     changeMonth(data){
         console.log(data)
         this.setState({
             currentYear:    data.year,
             currentMonth:   data.month,
+        })
+    }
+
+    createForm(data){
+        let newEvents = this.state.events
+
+        if(!this.state.events[data[1].year][data[1].month][data[1].day])
+            this.state.events[data[1].year][data[1].month][data[1].day] = []
+
+
+        // this.state.events[data[1].year][data[1].month][data[1].day].push(data[0])
+        this.state.events[data[1].year][data[1].month][data[1].day].push(data[0])
+
+        newEvents = this.state.events
+
+        console.log(newEvents[data[1].year][data[1].month])
+
+        // this.setState({
+        //     events:    newEvents
+        // })
+
+        this.setState({ events: {}}, () => {
+            this.setState({ events: newEvents })
         })
     }
 }
