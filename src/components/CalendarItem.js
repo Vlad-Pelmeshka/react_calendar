@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import Event from './Event';
 import { Tooltip } from 'react-tooltip'
 import EventForm from './EventForm';
 import 'react-tooltip/dist/react-tooltip.css'
+import EventDragElement from './EventDragElement';
 
 
 class CalendarItem extends React.Component {
@@ -80,20 +80,15 @@ class CalendarItem extends React.Component {
     }
 
     getEvents(el){
+
         if(this.props.events)
             return(<div className='calendar-item-event'>
                 { this.props.events.map((event, index) => (
-                    <Event 
-                        key={index + '_' + this.state.uniqueCode} 
-                        uniqueDate={this.state.uniqueCode} 
-                        uniqueIndex={index} event={event}
-                        onEditForm={(data) => this.editForm(data,index)}
-                    />
+                    <EventDragElement event={event} index={index} obj={this} key={index} />
                 ))}
             </div>)
     }
 
 }
-
 
 export default CalendarItem
