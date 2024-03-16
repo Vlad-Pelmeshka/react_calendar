@@ -4,8 +4,8 @@ import Event from './Event';
 
 function EventDragElement({ event, index, obj }) {
     const [{ isDragging }, drag] = useDrag(() => ({
-        type: 'event', // Визначте тип як 'event' або інший відповідно до вашого використання
-        item: { event, index }, // Передайте дані, які ви хочете перетягувати
+        type: 'event', 
+        item: { event, index, obj }, 
         collect: (monitor) => ({
             isDragging: !!monitor.isDragging()
         })
@@ -13,7 +13,7 @@ function EventDragElement({ event, index, obj }) {
 
     return (
         <div
-            ref={drag} // Прикріпіть 'drag' до DOM-елемента, який ви хочете зробити перетягуваним
+            ref={drag}
             style={{
                 opacity: isDragging ? '0.5' : '1',
                 cursor: 'move',

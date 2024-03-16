@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Tooltip } from 'react-tooltip'
 import EventForm from './EventForm';
 import 'react-tooltip/dist/react-tooltip.css'
-import EventDragElement from './EventDragElement';
+import EventDropBox from './EventDropBox';
 
 
 class CalendarItem extends React.Component {
@@ -82,11 +82,8 @@ class CalendarItem extends React.Component {
     getEvents(el){
 
         if(this.props.events)
-            return(<div className='calendar-item-event'>
-                { this.props.events.map((event, index) => (
-                    <EventDragElement event={event} index={index} obj={this} key={index} />
-                ))}
-            </div>)
+            return(<EventDropBox obj={this} onDrop={(data, obj) => this.props.onDrop(data, obj)} />)
+
     }
 
 }

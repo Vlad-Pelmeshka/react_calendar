@@ -113,6 +113,7 @@ class Calendar extends React.Component {
                                     <CalendarItem 
                                         key={el.year + '_' + el.month + '_' + el.day + '_' + el.index} item={el} 
                                         onCreateForm={(data) => this.createForm([data, el])}
+                                        onDrop={(data, obj) => this.onDrop(data, obj)} 
                                         onEditForm={(data, index) => this.editForm(data, index, el.year, el.month, el.day)}
                                         events={ this.state.events ? (this.state.events[el.year] ? (this.state.events[el.year][el.month] ? (this.state.events[el.year][el.month][el.day] ?? []) : []) : []) : []} 
                                     />
@@ -173,6 +174,30 @@ class Calendar extends React.Component {
         this.setState({ events: {}}, () => {
             this.setState({ events: events })
         })
+    }
+
+    onDrop(data, obj){
+        let events = this.state.events
+        let date = obj.props.item
+        let event_date = data.obj.props.item
+
+        console.log(data);
+        if(!events)
+            events = []
+        if(!events[date.year])
+            events[date.year] = []
+        if(!events[date.year][date.month])
+            events[date.year][date.month] = []
+        if(!events[date.year][date.month][date.day])
+            events[date.year][date.month][date.day] = []
+
+        delete events[event_date.year][event_date.month][event_date.day][data.index]
+        events[date.year][date.month][date.day].unshift(data.event)
+
+        this.setState({ events: {}}, () => {
+            this.setState({ events: events })
+        })
+            
     }
 }
 
