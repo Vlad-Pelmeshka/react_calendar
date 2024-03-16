@@ -9,13 +9,9 @@ class Calendar extends React.Component {
     constructor(props){
         super(props)
         this.state = {
-            // currentYear: new Date().getFullYear(),
-            // currentMonth: new Date().getMonth(),
-            currenDate: [
-                new Date().getFullYear(),
-                new Date().getMonth(),
-                0
-            ],
+            currentYear: new Date().getFullYear(),
+            currentMonth: new Date().getMonth(),
+            // currentDay: 0,
             /*events: [
                 {
                     2024: [ 
@@ -80,6 +76,7 @@ class Calendar extends React.Component {
         }
 
         this.changeMonth    = this.changeMonth.bind(this)
+        // this.setDate        = this.setDate.bind(this)
         this.createForm     = this.createForm.bind(this)
     }
 
@@ -101,7 +98,7 @@ class Calendar extends React.Component {
                 year: currentDate.getFullYear(),
                 month: currentDate.getMonth(),
                 day: currentDate.getDate(),
-                currentMonth: (currentDate.getMonth() === this.state.currenDate.month),
+                currentMonth: (currentDate.getMonth() === this.state.currentMonth),
                 monthShortTitle: (currentDate.getDate() === 1 || currentDate.getTime() === lastDayOfMonth.getTime() || currentDate.getTime() === new Date(year, month, 0).getTime()) ? this.getShortMonthTitle(currentDate.getMonth()) : null
             });
             currentDate.setDate(currentDate.getDate() + 1);
@@ -117,26 +114,40 @@ class Calendar extends React.Component {
     
     render(){
 
-        let weekDates = this.getWeekDatesForMonth(this.state.currenDate.year, this.state.currenDate.month)
+        // console.log(this.state.currenDate)
+        // console.log(this.state.currentYear)
+        let weekDates = this.getWeekDatesForMonth(this.state.currentYear, this.state.currentMonth)
         
         // console.log(weekDates)
         return (
             <div>
-                <Header currentYear={this.state.currenDate.year} currentMonth={this.state.currenDate.month} onChangeMonth={this.changeMonth}/>
+                <Header currentYear={this.state.currentYear} currentMonth={this.state.currentMonth} onChangeMonth={this.changeMonth}/>
                 <div className="calendar">
                     <HeaderCalendar />
                     <div className="calendar-list calendar-grid">
                         { weekDates.map((el, index) => {
-                                this.setDate([
-                                    el.year,
-                                    el.month,
-                                    el.day,
-                                ])
-                                return( <CalendarItem 
-                                    key={el.year + '_' + el.month + '_' + el.day + '_' + el.index} 
-                                    onCreateForm={(data) => this.createForm([data, el])}
-                                    item={el} events={ this.state.events ? (this.state.events[this.state.currenDate.year] ? (this.state.events[this.state.currenDate.year][this.state.currenDate.month] ? (this.state.events[this.state.currenDate.year][this.state.currenDate.month][this.state.currenDate.day] ?? []) : []) : []) : []} 
-                                />)
+                                // this.setDate([
+                                //     el.year,
+                                //     el.month,
+                                //     el.day,
+                                // ])
+                                // this.setState({
+                                    // currentYear: data.year,
+                                    // currentMonth: data.month,
+                                    // currentDay: el.day
+                                // })
+                                return( 
+                                    /*<CalendarItem 
+                                        key={el.year + '_' + el.month + '_' + el.day + '_' + el.index} item={el} 
+                                        events={ this.state.events ? (this.state.events[el.year] ? (this.state.events[el.year][el.month] ? (this.state.events[el.year][ el.month][el.day] ?? []) : []) : []) : []} 
+                                    />*/
+                                    <CalendarItem 
+                                        key={el.year + '_' + el.month + '_' + el.day + '_' + el.index} item={el} 
+                                        onCreateForm={(data) => this.createForm([data, el])}
+                                        onEditForm={(data, index) => this.editForm(data, index, el.year, el.month, el.day)}
+                                        events={ this.state.events ? (this.state.events[this.state.currentYear] ? (this.state.events[this.state.currentYear][this.state.currentMonth] ? (this.state.events[this.state.currentYear][this.state.currentMonth][el.day] ?? []) : []) : []) : []} 
+                                    />
+                                )
                             })
                         }
                     </div>
@@ -145,16 +156,6 @@ class Calendar extends React.Component {
         );
     }
 
-    setDate(data){
-        console.log(data)
-        this.setState({
-            currenDate:    [
-                data.year,
-                data.month,
-                data.date
-            ]
-        })
-    }
 
     changeMonth(data){
         console.log(data)
@@ -164,26 +165,40 @@ class Calendar extends React.Component {
         })
     }
 
-    createForm(data){
-        let newEvents = this.state.events
+    editForm(data, index, year, month, day){
 
-        if(!this.state.events[data[1].year][data[1].month][data[1].day])
-            this.state.events[data[1].year][data[1].month][data[1].day] = []
+        let events = this.state.events
 
-
-        // this.state.events[data[1].year][data[1].month][data[1].day].push(data[0])
-        this.state.events[data[1].year][data[1].month][data[1].day].push(data[0])
-
-        newEvents = this.state.events
-
-        console.log(newEvents[data[1].year][data[1].month])
-
-        // this.setState({
-        //     events:    newEvents
-        // })
+        if(data.deleteEvent){
+            delete events[year][month][day][index]
+        }else
+            events[year][month][day][index] = data
 
         this.setState({ events: {}}, () => {
-            this.setState({ events: newEvents })
+            this.setState({ events: events })
+        })
+    }
+
+    createForm(data){
+        let events = this.state.events
+
+        if(!events)
+            events = []
+        if(!events[data[1].year])
+            events[data[1].year] = []
+        if(!events[data[1].year][data[1].month])
+            events[data[1].year][data[1].month] = []
+        if(!events[data[1].year][data[1].month][data[1].day])
+            events[data[1].year][data[1].month][data[1].day] = []
+
+        events[data[1].year][data[1].month][data[1].day].push(data[0])
+
+        // newEvents = this.state.events
+
+        console.log(events[data[1].year][data[1].month])
+
+        this.setState({ events: {}}, () => {
+            this.setState({ events: events })
         })
     }
 }

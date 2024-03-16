@@ -37,25 +37,33 @@ class EventForm extends React.Component {
                     {/* <input id="color" type="color" value={this.state.colors[0]} /> */}
                     <FormColor color={this.state.colors[0] ?? '#00ff00'} onSetColor={(data) => {this.setState({colors: [data.hex]})}} />
                 </div>
-                {/* <textarea placeholder="Bio" value={this.state.bio} onChange={(e) => this.setState({bio: e.target.value})}></textarea> */}
-                {/* <input placeholder="Age" value={this.state.age} type="number" onChange={(e) => this.setState({age: e.target.value})}/> */}
-                {/* <input type="checkbox" id="isHappy" onChange={(e) => this.setState({isHappy: e.target.checked})}/> */}
                 <button type="button" onClick={() => {
 
                     this.eventSet = {
                         title: this.state.title,
                         colors: this.state.colors,
-                        // bio: this.state.bio,
-                        // age: this.state.age,
-                        // isHappy: this.state.isHappy
                     }
 
                     this.props.onEvent(this.eventSet)
                     this.myForm.reset()
-                }}>{this.props.user ? "Save" : "Add"}</button>
+                }}>
+                    {this.props.event ? "Save" : "Add"}
+                </button>
+                
+                {this.props.event && <button type="button" onClick={() => {
+                    this.eventSet = {
+                        deleteEvent: true
+                    }
+
+                    this.props.onEvent(this.eventSet)
+                    this.myForm.reset()
+                    }}>Delete
+                </button>}
+                
             </form>
         )
     }
+
 
 }
 
