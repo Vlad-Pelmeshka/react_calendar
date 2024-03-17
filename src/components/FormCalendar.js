@@ -45,7 +45,7 @@ class Calendar extends React.Component {
                     }
                 }
             },
-            countryCode: 'UA',
+            countryCode: 'GB',
             today: {
                 year: new Date().getFullYear(),
                 month: new Date().getMonth(),
