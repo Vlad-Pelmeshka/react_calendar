@@ -46,4 +46,11 @@ header{
         font-weight: 700;
     }
 
+    @media (max-width: 640px) {
+        padding: 10px 10px 40px;
+        .title{
+            bottom: 5px;
+        }
+    }
+
 }

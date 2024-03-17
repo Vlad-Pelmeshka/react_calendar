@@ -16,7 +16,7 @@ function EventDragElement({ event, index, obj, isHoliday }) {
             ref={isHoliday ? null : drag }
             style={{
                 opacity: isDragging ? '0.5' : '1',
-                cursor: 'move',
+                cursor:(isHoliday ? 'auto' : 'move')
             }}
         >
             <Event

@@ -11,7 +11,8 @@ class CalendarItem extends React.Component {
         super(props)
         this.state = {
             isOpen: false,
-            uniqueCode: this.props.item.day + "-" + this.props.item.month + "-" + this.props.item.year 
+            uniqueCode: this.props.item.day + "-" + this.props.item.month + "-" + this.props.item.year, 
+            cardCount: Object.keys(this.props.events).length + Object.keys(this.props.holidays).length
         }
 
         this.handleClick    = this.handleClick.bind(this)
@@ -32,6 +33,7 @@ class CalendarItem extends React.Component {
                 <div className="calendar-item-container">
                     <div className="calendar-item-head">
                     <b>{((el.monthShortTitle) && (el.monthShortTitle + " ")) + el.day}</b>
+                    { this.getCountCard() }
                     </div>
                     <DndProvider backend={HTML5Backend}>
                         <EventDropBox
@@ -56,6 +58,24 @@ class CalendarItem extends React.Component {
                 />
             </div>
         )
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.events !== this.props.events || prevProps.holidays !== this.props.holidays) {
+            this.setState({
+                cardCount: Object.keys(this.props.events).length + Object.keys(this.props.holidays).length
+            });
+        }
+    }
+
+    getCountCard(){
+        if( this.state.cardCount)
+            return(
+                <div className="calendar-item-head-count_el">
+                    { this.state.cardCount } 
+                    <span> { (this.state.cardCount === 1) ? "card" : "cards" }</span>
+                </div>
+            )
     }
 
     createForm(data){
