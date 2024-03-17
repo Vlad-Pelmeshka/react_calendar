@@ -17,21 +17,21 @@ class Calendar extends React.Component {
                         11: [
                             {
                                 title: 'Long description event. For test long title display on two lines.',
-                                colors: ['#ff0000','#0000ff'],
+                                colors: ['#0099ff'],
                             }
                         ],
                         17: [
                             {
                                 title: 'Event 1',
-                                colors: ['#ff0000','#00ff00'],
+                                colors: ['#00ff00'],
                             },
                             {
                                 title: 'Event 2',
-                                colors: ['#ff9955','#00ff00'],
+                                colors: ['#ff9955'],
                             },
                             {
                                 title: 'Event 3',
-                                colors: ['#0000ff','#ff9955'],
+                                colors: ['#0000ff'],
                             }
                         ]
                     },
@@ -39,7 +39,7 @@ class Calendar extends React.Component {
                         1: [
                             {
                                 title: 'Event 3-1',
-                                colors: ['#ff0000','#00ff00'],
+                                colors: ['#00ff00'],
                             }
                         ]
                     }
