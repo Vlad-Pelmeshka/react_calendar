@@ -227,6 +227,7 @@ class Calendar extends React.Component {
             for (const month in events[year]) {
                 for (const day in events[year][month]) {
                     for (const event of events[year][month][day]) {
+                        console.log(event)
                         if (searchQuery && event.title.toLowerCase().includes(searchQuery.toLowerCase())) {
                             event.search = true
                         }else{
