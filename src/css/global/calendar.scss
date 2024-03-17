@@ -49,6 +49,17 @@
                 }
             }
 
+            &.today{
+                background-color: var(--selected);
+                .calendar-item{
+                    &-head{
+                        b{
+                            color: var(--selected) !important;
+                        }
+                    }
+                }
+            }
+
             &.calendar-current_month{
                 .calendar-item{
                     &-container{

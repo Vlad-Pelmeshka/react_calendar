@@ -19,6 +19,21 @@
         }
     }
 
+    &-search-true{
+        border: 2px solid black;
+        padding: 3px;
+        
+    }
+
+    &-holiday{
+        background-color: #ffefef;
+
+        .event-colors div{
+            max-width: 100%;
+        }
+        
+    }
+
     &-form{
 
         &-line{

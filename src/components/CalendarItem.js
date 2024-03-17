@@ -23,7 +23,7 @@ class CalendarItem extends React.Component {
         const el = this.props.item
         return(
             <div
-            className={"calendar-grid-item " + ((el.currentMonth) && 'calendar-current_month')} 
+            className={"calendar-grid-item " + ((el.currentMonth) ? "calendar-current_month " : "") + (this.props.isToday ? "today" : "") } 
             data-tooltip-id={"my-tooltip_add_" + this.state.uniqueCode} 
             onContextMenu={ (e) => {this.handleClick(e, el) }} 
             data-tooltip-offset={0} 
@@ -48,7 +48,7 @@ class CalendarItem extends React.Component {
                     render={() => (
                         <EventForm
                             styleEl={this.state.opacityEl}
-                            date={this.state.uniqueDate}
+                            date={this.state.uniqueCode}
                             onEvent={(data) => this.createForm(data)}
                         />
                     )}

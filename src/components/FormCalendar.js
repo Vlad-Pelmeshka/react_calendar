@@ -45,7 +45,12 @@ class Calendar extends React.Component {
                     }
                 }
             },
-            countryCode: 'UA'
+            countryCode: 'UA',
+            today: {
+                year: new Date().getFullYear(),
+                month: new Date().getMonth(),
+                day: new Date().getDate()
+            }
         }
 
         this.changeMonth    = this.changeMonth.bind(this)
@@ -89,13 +94,16 @@ class Calendar extends React.Component {
     
     render(){
 
-        // console.log(this.state.currenDate)
-        // console.log(this.state.currentYear)
         let weekDates = this.getWeekDatesForMonth(this.state.currentYear, this.state.currentMonth)
         
         return (
             <div>
-                <Header currentYear={this.state.currentYear} currentMonth={this.state.currentMonth} onChangeMonth={this.changeMonth}/>
+                <Header 
+                    currentYear={ this.state.currentYear } 
+                    currentMonth={ this.state.currentMonth } 
+                    onChangeMonth={ this.changeMonth }
+                    onSearch={ (data) => this.setSearch(data) }
+                />
                 <div className="calendar">
                     <HeaderCalendar />
                     <div className="calendar-list calendar-grid">
@@ -108,6 +116,7 @@ class Calendar extends React.Component {
                                         onEditForm={(data, index) => this.editForm(data, index, el.year, el.month, el.day)}
                                         events={ this.state.events ? (this.state.events[el.year] ? (this.state.events[el.year][el.month] ? (this.state.events[el.year][el.month][el.day] ?? []) : []) : []) : []} 
                                         holidays={ this.state.holidays ? (this.state.holidays[el.year] ? (this.state.holidays[el.year][el.month] ? (this.state.holidays[el.year][el.month][el.day] ?? []) : []) : []) : []}
+                                        isToday={ (this.state.today.year === el.year && this.state.today.month === el.month && this.state.today.day === el.day) ? true : false}
                                     />
                                 )
                             })
@@ -139,7 +148,7 @@ class Calendar extends React.Component {
 
                     holidaysList[date.getFullYear()][date.getMonth()][date.getDate()].push({
                         title: event.localName,
-                        colors: ['#ff00fb']
+                        colors: ['#ffcccc']
                     })
                 })
                 this.setState({ holidays: holidaysList })
@@ -198,12 +207,45 @@ class Calendar extends React.Component {
         })
     }
 
+    setSearch(search){
+        
+        let events   = this.serachInObj(search, this.state.events)
+        let holidays = this.serachInObj(search, this.state.holidays)
+
+        this.setState({ events: {}}, () => {
+            this.setState({ events: events })
+        })
+
+        this.setState({ holidays: {}}, () => {
+            this.setState({ holidays: holidays })
+        })
+    }
+
+    serachInObj(searchQuery, events){
+    
+        for (const year in events) {
+            for (const month in events[year]) {
+                for (const day in events[year][month]) {
+                    for (const event of events[year][month][day]) {
+                        if (searchQuery && event.title.toLowerCase().includes(searchQuery.toLowerCase())) {
+                            event.search = true
+                        }else{
+                            if(event.search)
+                                event.search = false
+                        }
+                    }
+                }
+            }
+        }
+
+        return events;
+    }
+
     onDrop(data, obj){
         let events = this.state.events
         let date = obj.props.item
         let event_date = data.obj.props.item
 
-        console.log(data);
         if(!events)
             events = []
         if(!events[date.year])

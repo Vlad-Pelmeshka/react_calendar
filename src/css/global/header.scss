@@ -28,6 +28,17 @@ header{
         }
     }
 
+    .search-form{
+        input[type="search"]{
+            padding: 5px;
+            border: 0;
+            background-color: #e3e4e6;
+            color: #333;
+            outline: none;
+            border-radius: 3px;
+        }
+    }
+
     .title{
         position: absolute;
         left: 50%;

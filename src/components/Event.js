@@ -20,8 +20,8 @@ class Event extends React.Component {
     render(){
         return(
             <div 
-                className="event"
-                data-tooltip-id={"my-tooltip_edit_" + this.props.uniqueCode} 
+                className={"event " + (this.state.event.search ? "event-search-true" : "") + (this.props.isHoliday ? "event-holiday" : "")}
+                data-tooltip-id={"my-tooltip_edit_" + this.props.uniqueDate + "_" + this.props.uniqueIndex} 
                 onContextMenu={ (e) => {this.handleClick(e) }} 
                 data-tooltip-offset={0} 
                 onMouseLeave={ (e) => {this.hideTooltip(e)}}
@@ -35,7 +35,7 @@ class Event extends React.Component {
 
                 { !this.props.isHoliday && <Tooltip 
                     isOpen={this.state.isOpen} 
-                    id={"my-tooltip_edit_" + this.props.uniqueCode} 
+                    id={"my-tooltip_edit_" + this.props.uniqueDate + "_" + this.props.uniqueIndex} 
                     render={() => <EventForm 
                         styleEl={this.state.opacityEl} 
                         date={this.state.uniqueDate} 

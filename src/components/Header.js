@@ -32,6 +32,10 @@ class Header extends React.Component {
                     
                 </div>
                 <div className="button_list change_display_list">
+                    
+                    <form className="search-form" ref={(el) => this.myForm = el}>
+                        <input type="search" placeholder='Search' onChange={(e) => this.props.onSearch(e.target.value)} />
+                    </form>
                     <button>
                         Month
                     </button>
