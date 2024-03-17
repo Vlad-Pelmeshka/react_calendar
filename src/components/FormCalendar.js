@@ -2,7 +2,7 @@ import React from 'react';
 import Header from './Header';
 import HeaderCalendar from './HeaderCalendar';
 import CalendarItem from './CalendarItem';
-// import React, { useState } from 'react';
+import axios from 'axios';
 
 class Calendar extends React.Component {
 
@@ -16,47 +16,43 @@ class Calendar extends React.Component {
                     2: {
                         11: [
                             {
-                                title: 'Event 1Event 1Event 1Event 1Event 1Event 1Event 1',
+                                title: 'Long description event. For test long title display on two lines.',
                                 colors: ['#ff0000','#0000ff'],
-                            },
-                            {
-                                title: 'Event 11',
-                                colors: ['#ff9955','#00ff00'],
-                            },
-                            {
-                                title: 'Event 21',
-                                colors: ['#0000ff','#ff9955'],
                             }
                         ],
                         17: [
                             {
-                                title: 'Event 17',
+                                title: 'Event 1',
                                 colors: ['#ff0000','#00ff00'],
+                            },
+                            {
+                                title: 'Event 2',
+                                colors: ['#ff9955','#00ff00'],
+                            },
+                            {
+                                title: 'Event 3',
+                                colors: ['#0000ff','#ff9955'],
                             }
                         ]
                     },
                     3: {
-                        29: [
+                        1: [
                             {
-                                title: 'Event 2',
+                                title: 'Event 3-1',
                                 colors: ['#ff0000','#00ff00'],
                             }
                         ]
-                    },
-                    4: {
-                        1: [
-                            {
-                                title: 'Event 3',
-                                colors: ['#ff0000','#ff6f00'],
-                            }
-                        ]
-                    },
+                    }
                 }
-            }
+            },
+            countryCode: 'UA'
         }
 
         this.changeMonth    = this.changeMonth.bind(this)
         this.createForm     = this.createForm.bind(this)
+        this.getHolidays    = this.getHolidays.bind(this)
+
+        this.getHolidays();
     }
 
     getWeekDatesForMonth(year, month) {
@@ -104,11 +100,6 @@ class Calendar extends React.Component {
                     <HeaderCalendar />
                     <div className="calendar-list calendar-grid">
                         { weekDates.map((el, index) => {
-                                // this.setState({
-                                    // currentYear: data.year,
-                                    // currentMonth: data.month,
-                                    // currentDay: el.day
-                                // })
                                 return( 
                                     <CalendarItem 
                                         key={el.year + '_' + el.month + '_' + el.day + '_' + el.index} item={el} 
@@ -116,6 +107,7 @@ class Calendar extends React.Component {
                                         onDrop={(data, obj) => this.onDrop(data, obj)} 
                                         onEditForm={(data, index) => this.editForm(data, index, el.year, el.month, el.day)}
                                         events={ this.state.events ? (this.state.events[el.year] ? (this.state.events[el.year][el.month] ? (this.state.events[el.year][el.month][el.day] ?? []) : []) : []) : []} 
+                                        holidays={ this.state.holidays ? (this.state.holidays[el.year] ? (this.state.holidays[el.year][el.month] ? (this.state.holidays[el.year][el.month][el.day] ?? []) : []) : []) : []}
                                     />
                                 )
                             })
@@ -126,9 +118,39 @@ class Calendar extends React.Component {
         );
     }
 
+    getHolidays(year = this.state.currentYear){
+
+        let holidaysList = []
+        for(let i = year - 1; i <= year + 1; i++){
+            let baseUrl = "https://date.nager.at/api/v3/PublicHolidays/" + i + "/" + this.state.countryCode
+
+
+            axios.get(baseUrl).then((res) => {
+                let holidays = res.data
+
+                holidays.map((event) => {
+                    let date = new Date(event.date)
+                    if(!holidaysList[date.getFullYear()])
+                        holidaysList[date.getFullYear()] = []
+                    if(!holidaysList[date.getFullYear()][date.getMonth()])
+                        holidaysList[date.getFullYear()][date.getMonth()] = []
+                    if(!holidaysList[date.getFullYear()][date.getMonth()][date.getDate()])
+                        holidaysList[date.getFullYear()][date.getMonth()][date.getDate()] = []
+
+                    holidaysList[date.getFullYear()][date.getMonth()][date.getDate()].push({
+                        title: event.localName,
+                        colors: ['#ff00fb']
+                    })
+                })
+                this.setState({ holidays: holidaysList })
+            })
+        }
+    }
 
     changeMonth(data){
-        // console.log(data)
+        if(this.state.currentYear !== data.year)
+            this.getHolidays(data.year)
+
         this.setState({
             currentYear:    data.year,
             currentMonth:   data.month,

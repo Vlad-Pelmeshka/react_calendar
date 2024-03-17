@@ -11,7 +11,6 @@ function DropTargetComponent({ obj, onDrop }) {
       isOver: monitor.isOver(),
     }),
   }));
-
   return (
     <div className='calendar-item-event'
       ref={drop} 
@@ -19,8 +18,11 @@ function DropTargetComponent({ obj, onDrop }) {
         border: isOver ? '2px dashed gray' : 'none',
       }}
     >
+        { obj.props.holidays.map((event, index) => (
+            <EventDragElement event={event} index={index} obj={obj} key={index} isHoliday="true"/>
+        ))}
         { obj.props.events.map((event, index) => (
-            <EventDragElement event={event} index={index} obj={obj} key={index} />
+            <EventDragElement event={event} index={index} obj={obj} key={index}/>
         ))}
     </div>
   );

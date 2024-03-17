@@ -18,9 +18,6 @@ class Event extends React.Component {
     }
     
     render(){
-
-        // console.log(this.props.event)
-        // console.log(this.state.event.title)
         return(
             <div 
                 className="event"
@@ -36,7 +33,7 @@ class Event extends React.Component {
                 </div>
                 <div className="event-title">{this.state.event.title}</div>
 
-                <Tooltip 
+                { !this.props.isHoliday && <Tooltip 
                     isOpen={this.state.isOpen} 
                     id={"my-tooltip_edit_" + this.props.uniqueCode} 
                     render={() => <EventForm 
@@ -46,7 +43,8 @@ class Event extends React.Component {
                         onEvent={(data) => (this.editForm(data))}
                     />} 
                     style={{pointerVisible: this.state.pointerVisible}}
-                />
+                />}
+                
             </div>
         )
     }
