@@ -20,7 +20,7 @@ class Event extends React.Component {
     render(){
         return(
             <div 
-                className={"event " + (this.state.event.search ? "event-search-true" : "") + (this.props.isHoliday ? "event-holiday" : "")}
+                className={"event " + (this.state.event.search ? "event-search-true " : "") + (this.props.isHoliday ? "event-holiday" : "")}
                 data-tooltip-id={"my-tooltip_edit_" + this.props.uniqueDate + "_" + this.props.uniqueIndex} 
                 onContextMenu={ (e) => {this.handleClick(e) }} 
                 data-tooltip-offset={0} 
